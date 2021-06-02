@@ -6,7 +6,7 @@ const axios = require("axios")
 exports.getUserCommits = (req, res) => {
   axios.get('https://api.github.com/users/EdnGG/repos')
     .then((res) => {
-    console.log(res.data)
+    console.log(res.data.git_commits_url)
   })
   res.send('hey there', JSON.stringify(res.data))
 }

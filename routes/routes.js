@@ -7,7 +7,7 @@ const getCommits = require('../helpers/getUserCommits')
 //   const url = 'https://api.github.com/users/EdnGG/repos'
 // }
 
-router.get('/commits', async (req, res) => {
+router.get('/', async (req, res) => {
 
   // const body = {
   //   nombre: req.body,
