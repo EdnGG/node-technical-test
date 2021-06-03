@@ -10,8 +10,6 @@ import fileUpload from 'express-fileupload'
 
 const app = express()
 
-// const uri = 'mongodb://localhost:27017/api-pokemon'
-
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
