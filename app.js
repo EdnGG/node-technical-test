@@ -1,22 +1,23 @@
 require("dotenv").config();
 
-
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import path from 'path'
 import mongoose from 'mongoose'
 import fileUpload from 'express-fileupload'
 
+
 const app = express()
 
-const uri = 'mongodb://localhost:27017/mevn'
+// const uri = 'mongodb://localhost:27017/api-pokemon'
 
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 }
-mongoose.connect(uri, options).then(
+mongoose.connect(process.env.URI, options).then(
   () => {
     console.log('conectado a Mongo DB')
   }, err => {
