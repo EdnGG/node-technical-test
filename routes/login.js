@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const getCommits = require('../helpers/getUserCommits')
 
-
 // function getUserCommits() {
 //   const url = 'https://api.github.com/users/EdnGG/repos'
 // }
