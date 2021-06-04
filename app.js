@@ -15,7 +15,7 @@ const options = {
   useCreateIndex: true,
   useUnifiedTopology: true,
 }
-mongoose.connect(process.env.URI, options).then(
+mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
   }, err => {
