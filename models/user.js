@@ -9,7 +9,7 @@ const roles = {
 }
 
 const userSchema = new Schema({
-  nombre: { type: String, required: [true, 'Name is required'] },
+  name: { type: String, required: [true, 'Name is required'] },
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -18,7 +18,7 @@ const userSchema = new Schema({
   pass: { type: String, required: [true, 'Password is required'] },
   date: { type: Date, default: Date.now },
   role: { type: String, default: 'USER', enum: roles },
-  activo: { type: Boolean, default: true },
+  active: { type: Boolean, default: true },
   image: { type: String, required: false }
 })
 

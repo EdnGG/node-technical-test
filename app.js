@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }))
 
 
 
-app.use(require('./routes/login'))
+app.use(require('./routes/user'))
 
 // Midleware para vue.js router modo history
 const history = require('connect-history-api-fallback')
