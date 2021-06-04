@@ -15,6 +15,7 @@ const options = {
   useCreateIndex: true,
   useUnifiedTopology: true,
 }
+// Conexion to Mongo Atlas
 mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
