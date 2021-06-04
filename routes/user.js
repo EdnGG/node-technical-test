@@ -16,29 +16,29 @@ const saltRounds = 10
 const _ = require('underscore')
 
 // Get 
-router.get('/', async (req, res) => {
+// router.get('/', async (req, res) => {
 
-  // const body = {
-  //   nombre: req.body,
-  //   email: req.body,
-  //   role: req.body,
-  // }
-  try {
+//   // const body = {
+//   //   nombre: req.body,
+//   //   email: req.body,
+//   //   role: req.body,
+//   // }
+//   try {
 
-/************************** */
-  // const commitUserGithub = ''
-  //   res.json(commitUserGithub)
+// /************************** */
+//   // const commitUserGithub = ''
+//   //   res.json(commitUserGithub)
 
-    res.send('Hello world')
+//     res.send('Hello world')
 
 
-  } catch (error) {
-    return res.status(500).json({
-      mensaje: 'Something was wrong',
-      error
-    })
-  }
-})
+//   } catch (error) {
+//     return res.status(500).json({
+//       mensaje: 'Something was wrong',
+//       error
+//     })
+//   }
+// })
 
 // POST Login
 router.post('/login', async (req, res) => {
