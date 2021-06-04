@@ -18,7 +18,7 @@ const options = {
 // Conexion to Mongo Atlas
 // const URI_CLOUD = 'mongodb+srv://adm_1:UKLWDuVTw1S01uyi@fulltime-force.j6b1q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
-mongoose.connect(URI_CLOUD, options).then(
+mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
   }, err => {
