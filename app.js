@@ -16,7 +16,9 @@ const options = {
   useUnifiedTopology: true,
 }
 // Conexion to Mongo Atlas
-mongoose.connect(process.env.URI_CLOUD, options).then(
+const URI_CLOUD = 'mongodb+srv://adm_1:kBcYiAeHEyOijiPh@fulltimeforce.689od.mongodb.net/dbfulltimeforce?retryWrites=true&w=majority'
+
+mongoose.connect(URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
   }, err => {
