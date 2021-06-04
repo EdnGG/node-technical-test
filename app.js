@@ -16,7 +16,9 @@ const options = {
   useUnifiedTopology: true,
 }
 // Conexion to Mongo Atlas
-const URI_CLOUD = 'mongodb+srv://adm_1:kBcYiAeHEyOijiPh@fulltimeforce.689od.mongodb.net/dbfulltimeforce?retryWrites=true&w=majority'
+// const URI_CLOUD = 'mongodb+srv://adm_1:kBcYiAeHEyOijiPh@fulltimeforce.689od.mongodb.net/dbfulltimeforce?retryWrites=true&w=majority'
+
+const URI_CLOUD = 'mongodb+srv://adm_1:UKLWDuVTw1S01uyi@fulltime-force.j6b1q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 mongoose.connect(URI_CLOUD, options).then(
   () => {
