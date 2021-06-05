@@ -16,10 +16,6 @@ const options = {
   useUnifiedTopology: true,
 }
 
-// Conexion to Mongo Atlas
-// const URI_CLOUD = 'mongodb+srv://adm_1:UKLWDuVTw1S01uyi@fulltime-force.j6b1q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-// Por ahora no puedo pasar el URI a process.env porque se cae el app
-
 mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
