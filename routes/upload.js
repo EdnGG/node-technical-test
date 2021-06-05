@@ -75,16 +75,16 @@ function uploadImageCloudinary(_id, image, res) {
       console.log('Error al subir a cloudinary', error)
     }
     else {
-      User.findById(_id, (err, usuarioDB) => {
+      User.findById(_id, (err, userDB) => {
         if (err) {
           console.log('Error al relacionar usuario')
         } else {
-          usuarioDB.image = result.secure_url
-          //console.log('Usuario ya guardado con la imagen: ', usuarioDB)
-          usuarioDB.save((err, newUsuarioDB) => {
+          userDB.image = result.secure_url
+          //console.log('Usuario ya guardado con la imagen: ', userDB)
+          userDB.save((err, newUserDB) => {
             //console.log(newUsuarioDB)
             return res.json({
-              usuarioDB: newUsuarioDB
+              userDB: newUserDB
             })
           })
         }
@@ -98,8 +98,8 @@ function uploadImageCloudinary(_id, image, res) {
 function imagenUsuario(id, res, filePath) {
   const Usuario = require('../models/user.js')
 
-  Usuario.findById(id, (err, usuarioDB) => {
-    console.log('Pintando en consola el usuario: ', usuarioDB)
+  Usuario.findById(id, (err, userDB) => {
+    console.log('Pintando en consola el usuario: ', userDB)
     
     if (err) {
       console.log('Entre en primer if')
@@ -109,7 +109,7 @@ function imagenUsuario(id, res, filePath) {
       })
     }
     
-    // if (!usuarioDB) {
+    // if (!userDB) {
     //   console.log('Entre en segundo if')
     //   return res.status(400).json({
     //     ok: false,
@@ -124,15 +124,15 @@ function imagenUsuario(id, res, filePath) {
       console.log('Error al subir a cloudinary', error)
     }
     else {
-      usuarioDB.image = result.url
-      console.log('usuarioDB',usuarioDB)
-      usuarioDB.save()
+      userDB.image = result.url
+      console.log('userDB',userDB)
+      userDB.save()
     }
     })
   })
-    // usuarioDB.image = nombreArchivo
+    // userDB.image = nombreArchivo
 
-    // usuarioDB.save((err, usuarioGuardado) => {
+    // userDB.save((err, usuarioGuardado) => {
     //   console.log(usuarioGuardado)
     //   if (err) {
     //     console.log('Entre en tercer if')
