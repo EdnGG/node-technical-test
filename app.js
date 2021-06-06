@@ -37,6 +37,7 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.use(require('./routes/user'))
+app.use(require('./routes/upload'))
 
 // Midleware para vue.js router modo history
 const history = require('connect-history-api-fallback')
