@@ -10,14 +10,12 @@ const verificarAuth = (req, res, next) => {
       })
     }
     req.usuario = decoded.data
-
   next()
   })
 }
 
 const verificarAdministrador = (req, res, next) => {
   const role = req.usuario.role
-
   if (role === 'ADMIN') {
     next()
   } else {

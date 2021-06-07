@@ -80,9 +80,7 @@ function uploadImageCloudinary(_id, image, res) {
           console.log('Error al relacionar usuario')
         } else {
           userDB.image = result.secure_url
-          //console.log('Usuario ya guardado con la imagen: ', userDB)
           userDB.save((err, newUserDB) => {
-            //console.log(newUsuarioDB)
             return res.json({
               userDB: newUserDB
             })
@@ -92,69 +90,5 @@ function uploadImageCloudinary(_id, image, res) {
     }
   })
 }
-
-/*********** Actualizar imagen usuario ***************** */
-
-function imagenUsuario(id, res, filePath) {
-  const Usuario = require('../models/user.js')
-
-  Usuario.findById(id, (err, userDB) => {
-    console.log('Pintando en consola el usuario: ', userDB)
-    
-    if (err) {
-      console.log('Entre en primer if')
-      return res.status(500).json({
-        ok: false,
-        err: err
-      })
-    }
-    
-    // if (!userDB) {
-    //   console.log('Entre en segundo if')
-    //   return res.status(400).json({
-    //     ok: false,
-    //     err: {
-    //       message: 'Usuario no existente'
-    //     }
-    //   })
-    // }
-
-    cloudinary.uploader.upload(filePath, { tags: 'basic_sample' }, function (error, result) {
-    if (error) {
-      console.log('Error al subir a cloudinary', error)
-    }
-    else {
-      userDB.image = result.url
-      console.log('userDB',userDB)
-      userDB.save()
-    }
-    })
-  })
-    // userDB.image = nombreArchivo
-
-    // userDB.save((err, usuarioGuardado) => {
-    //   console.log(usuarioGuardado)
-    //   if (err) {
-    //     console.log('Entre en tercer if')
-    //     return res.status(400).json({
-    //       ok: false,
-    //       err: {
-    //       message: 'Fallo al guardar el usuario'
-    //       }
-    //     })
-    //   }
-
-    //   res.json({
-    //     ok: true,
-    //     usuario: usuarioGuardado,
-    //     image: nombreArchivo
-    //   })
-    // })
-
-  // })
-}
-
-
-/**************************************** */
 
 module.exports = router

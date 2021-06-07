@@ -15,31 +15,6 @@ const saltRounds = 10
 //Filtering fields on http-PUT
 const _ = require('underscore')
 
-// Get 
-// router.get('/', async (req, res) => {
-
-//   // const body = {
-//   //   nombre: req.body,
-//   //   email: req.body,
-//   //   role: req.body,
-//   // }
-//   try {
-
-// /************************** */
-//   // const commitUserGithub = ''
-//   //   res.json(commitUserGithub)
-
-//     res.send('Hello world')
-
-
-//   } catch (error) {
-//     return res.status(500).json({
-//       mensaje: 'Something was wrong',
-//       error
-//     })
-//   }
-// })
-
 // POST Login
 router.post('/login', async (req, res) => {
   const body = req.body
@@ -90,16 +65,8 @@ router.post('/signup', async (req, res) => {
   body.pass = bcrypt.hashSync(req.body.pass, saltRounds)
   try {
 
-/************************** */
   const userDB = await User.create(body)
     res.json(userDB)
-
-    // tokes is not necessary cuz user has been created
-    // res.json({
-    //   usuarioDB,
-    //   token
-    // })
-
 
   } catch (error) {
     return res.status(500).json({
