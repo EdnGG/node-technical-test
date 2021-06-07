@@ -19,7 +19,7 @@ const options = {
 mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB')
-  }, err => {
+  }, err => { 
     err
   } 
 )
