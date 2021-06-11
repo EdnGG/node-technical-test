@@ -3,13 +3,15 @@ const router = express.Router()
 
 const jwt = require('jsonwebtoken')
 
-const { OAuth2Client } = require('google-auth-library')
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+const { verify } = require('../helpers/google-verify')
+
+// const { OAuth2Client } = require('google-auth-library')
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const {verificarAuth, verificarAdministrador } = require('../middlewares/auth')
 
 // Importar el modelo User
-import User from '../models/user.js'
+const User = require('../models/user.js')
 
 // hash Password
 const bcrypt = require('bcrypt')
@@ -58,23 +60,23 @@ router.post('/login', async (req, res) => {
 
 // 
 
-async function verify( token = '') {
-  const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,  
-  });
-  const payload = ticket.getPayload();
-  // console.log(payload.name)
-  // console.log(payload.email)
-  // console.log(payload.picture)
+// async function verify( token = '') {
+//   const ticket = await client.verifyIdToken({
+//       idToken: token,
+//       audience: process.env.GOOGLE_CLIENT_ID,  
+//   });
+//   const payload = ticket.getPayload();
+//   // console.log(payload.name)
+//   // console.log(payload.email)
+//   // console.log(payload.picture)
 
-  return {
-    name: payload.name,
-    email: payload.email,
-    imgUrl: payload.picture,
-    // google: true
-  }
-}
+//   return {
+//     name: payload.name,
+//     email: payload.email,
+//     imgUrl: payload.picture,
+//     // google: true
+//   }
+// }
 
 
 //
@@ -83,27 +85,71 @@ async function verify( token = '') {
 
 router.post('/google', async (req, res) => {
   console.log('Google user: ', req.body)
+  
+  const id_token = req.body.id_token
+  // console.log('token: ', token)
 
-  const body = {
-    name: req.body.name,
-    email: req.body.email,
-    image: req.body.imgUrl,
-    // token: req.body.id_token
-    // role: req.body.role,
-  }
+  // const body = {
+  //   name: req.body.name,
+  //   email: req.body.email,
+  //   image: req.body.imgUrl,
+  // }
 
   try {
 
-  const token = await req.body.id_token
-  console.log('token: ', token)
-  
-  let googleUser = await verify( token )
-    .catch(err => {
-      return res.status(403).json({
-        ok: false,
-        err
-    })
+    const { email, name, image } = await verify(id_token);
+    
+    let user = await User.findOne({ email });
+
+    if ( !user ) {
+            // Tengo que crearlo
+            const data = {
+                name,
+                email,
+                pass: ':P',
+                image,
+                google: true
+            };
+
+            user = new User( data );
+            await user.save();
+    }
+    
+     // Si el usuario en DB
+        if ( user ) {
+            return res.status(401).json({
+                msg: 'Hable con el administrador, usuario bloqueado'
+            });
+        }
+
+        // // Generar el JWT
+        // const token = await generarJWT( usuario.id );
+    
+        const token = jwt.sign({
+          user: userDB
+          }, 'secret',{ expiresIn: process.env.CADUCIDAD_TOKEN })
+        
+        res.json({
+            user,
+            token
+        });
+        
+    } catch (error) {
+
+        res.status(400).json({
+            msg: 'Token de Google no es válido'
+        })
+
+  }
   })
+
+  // let googleUser = await verify( token )
+  //   .catch(err => {
+  //     return res.status(403).json({
+  //       ok: false,
+  //       err
+  //   })
+  // })
 
   // const userDB = await User.create(body)
   // res.json(userDB)
@@ -112,14 +158,18 @@ router.post('/google', async (req, res) => {
     // const userDB = await User.findOne({ email: googleUser.email })
 
 
-    if (!userDB) {
+    // if (!userDB) {
     
-    const userDB = await User.create(body)
-  res.json(userDB)
+    // const userDB = await User.create(body)
+    //   res.json(userDB)
+      
+
     //   return res.status(400).json({
     //     message: 'Email not found'
     //   })
-    } 
+      
+      
+    // } 
 
     // if (userDB) {
     //     return res.json({
@@ -128,45 +178,47 @@ router.post('/google', async (req, res) => {
     //       token
     //     })
     // }
-    else {
-    // if user dosen't exist on DB
-      let user = new User()
+    
+    
+//     else {
+//     // if user dosen't exist on DB
+//       let user = new User()
 
-      user.name = googleUser.name
-      user.email = googleUser.email
-      user.image = googleUser.imgUrl
-      // user.google = true,
-      // user.
-      user.pass = "123123123"
+//       user.name = googleUser.name
+//       user.email = googleUser.email
+//       user.image = googleUser.imgUrl
+//       // user.google = true,
+//       // user.
+//       user.pass = "123123123"
 
-      user.save((err, userDB) => {
-        if (err) {
-          return res.status(500).json({
-            ok: false,
-            err
-          })
-        }
+//       user.save((err, userDB) => {
+//         if (err) {
+//           return res.status(500).json({
+//             ok: false,
+//             err
+//           })
+//         }
 
-        let token = jwt.sign({
-          user: userDB
-          }, 'secret',{ expiresIn: process.env.CADUCIDAD_TOKEN })
+//         let token = jwt.sign({
+//           user: userDB
+//           }, 'secret',{ expiresIn: process.env.CADUCIDAD_TOKEN })
 
-        res.json({
-          ok: true,
-          user: userDB,
-          token
-        })
+//         res.json({
+//           ok: true,
+//           user: userDB,
+//           token
+//         })
 
-      })
-    }
+//       })
+//     }
 
-  } catch (err) {
-    return res.status(400).json({
-      mensaje: 'Something was wrong',
-      err
-    })
-  }
-})
+//   } catch (err) {
+//     return res.status(400).json({
+//       mensaje: 'Something was wrong',
+//       err
+//     })
+//   }
+// })
 
 
 // POST  New User (Signup)
