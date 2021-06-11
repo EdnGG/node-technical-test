@@ -1,1 +1,56 @@
-<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>vue-technical-test</title><link href="/css/about.74c8f771.css" rel="prefetch"><link href="/js/about.f2d626b2.js" rel="prefetch"><link href="/css/app.e9cf6543.css" rel="preload" as="style"><link href="/css/chunk-vendors.55204a1e.css" rel="preload" as="style"><link href="/js/app.165666c0.js" rel="preload" as="script"><link href="/js/chunk-vendors.78563e96.js" rel="preload" as="script"><link href="/css/chunk-vendors.55204a1e.css" rel="stylesheet"><link href="/css/app.e9cf6543.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but vue-technical-test doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="/js/chunk-vendors.78563e96.js"></script><script src="/js/app.165666c0.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta name="google-signin-client_id"
+    content="784763271473-mfngi6muqqlvk5spuadfre52ebj7ts1a.apps.googleusercontent.com">
+
+  <title>Google Sign In Demo</title>
+</head>
+
+<body>
+
+  <!-- <img src="http://localhost:3000/imagen/usuarios/5ff0b40ba985f7743571ed9e-355.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvbGUiOiJBRE1JTl9ST0xFIiwiZXN0YWRvIjp0cnVlLCJnb29nbGUiOmZhbHNlLCJfaWQiOiI1ZmVkNDU4ZTI0NjJkZDQ2N2Y4MzIxOWQiLCJub21icmUiOiJTb3BoaWEiLCJlbWFpbCI6InRlc3Q3QGdtYWlsLmNvbSIsIl9fdiI6MH0sImlhdCI6MTYxMDIyNDU4MCwiZXhwIjoxNjEwMzk3MzgwfQ.LeXM9yEqp1MFBscOx4coj6OTVswRl2Pg-JPGQStx-eE" alt=""> -->
+
+
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+  <a href="#" onclick="signOut();">Sign out</a>
+  <script>
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
+  </script>
+
+
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+      var id_token = googleUser.getAuthResponse().id_token;
+      console.log('Token de Google: ' + id_token)
+
+      // var xhr = new XMLHttpRequest();
+      // xhr.open('POST', '/google');
+      // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      // xhr.onload = function () {
+      //   console.log('Signed in as: ' + xhr.responseText);
+      // };
+      // xhr.send('idtoken=' + id_token);
+
+    }
+  </script>
+
+</body>
+
+</html>

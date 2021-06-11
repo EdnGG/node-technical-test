@@ -3,6 +3,9 @@ const router = express.Router()
 
 const jwt = require('jsonwebtoken')
 
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
 const {verificarAuth, verificarAdministrador } = require('../middlewares/auth')
 
 // Importar el modelo User
@@ -52,6 +55,119 @@ router.post('/login', async (req, res) => {
     })
   }
 })
+
+// 
+
+async function verify( token = '') {
+  const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,  
+  });
+  const payload = ticket.getPayload();
+  // console.log(payload.name)
+  // console.log(payload.email)
+  // console.log(payload.picture)
+
+  return {
+    name: payload.name,
+    email: payload.email,
+    imgUrl: payload.picture,
+    // google: true
+  }
+}
+
+
+//
+
+// POST Login (GOOGLE AUTH)
+
+router.post('/google', async (req, res) => {
+  console.log('Google user: ', req.body)
+
+  const body = {
+    name: req.body.name,
+    email: req.body.email,
+    image: req.body.imgUrl,
+    // token: req.body.id_token
+    // role: req.body.role,
+  }
+
+  try {
+
+  const token = await req.body.id_token
+  console.log('token: ', token)
+  
+  let googleUser = await verify( token )
+    .catch(err => {
+      return res.status(403).json({
+        ok: false,
+        err
+    })
+  })
+
+  // const userDB = await User.create(body)
+  // res.json(userDB)
+  
+    // // Validating email
+    // const userDB = await User.findOne({ email: googleUser.email })
+
+
+    if (!userDB) {
+    
+    const userDB = await User.create(body)
+  res.json(userDB)
+    //   return res.status(400).json({
+    //     message: 'Email not found'
+    //   })
+    } 
+
+    // if (userDB) {
+    //     return res.json({
+    //       ok: true,
+    //       user: userDB,
+    //       token
+    //     })
+    // }
+    else {
+    // if user dosen't exist on DB
+      let user = new User()
+
+      user.name = googleUser.name
+      user.email = googleUser.email
+      user.image = googleUser.imgUrl
+      // user.google = true,
+      // user.
+      user.pass = "123123123"
+
+      user.save((err, userDB) => {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            err
+          })
+        }
+
+        let token = jwt.sign({
+          user: userDB
+          }, 'secret',{ expiresIn: process.env.CADUCIDAD_TOKEN })
+
+        res.json({
+          ok: true,
+          user: userDB,
+          token
+        })
+
+      })
+    }
+
+  } catch (err) {
+    return res.status(400).json({
+      mensaje: 'Something was wrong',
+      err
+    })
+  }
+})
+
 
 // POST  New User (Signup)
 router.post('/signup', async (req, res) => {

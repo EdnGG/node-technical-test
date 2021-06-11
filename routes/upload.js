@@ -76,6 +76,7 @@ function uploadImageCloudinary(_id, image, res) {
     }
     else {
       User.findById(_id, (err, userDB) => {
+        console.log('Id:', _id)
         if (err) {
           console.log('Error al relacionar usuario')
         } else {
