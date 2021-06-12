@@ -16,7 +16,7 @@ const options = {
   useUnifiedTopology: true,
 }
 
-mongoose.connect(process.env.URI_CLOUD, options).then(
+mongoose.connect(process.env.URI, options).then(
   () => {
     console.log('conectado a Mongo DB')
   }, err => { 
