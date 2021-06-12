@@ -18,7 +18,7 @@ const options = {
 
 mongoose.connect(process.env.URI, options).then(
   () => {
-    console.log('conectado a Mongo DB')
+    console.log('conectado a Mongo DB', process.env.URI)
   }, err => { 
     err
   } 
