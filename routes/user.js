@@ -53,6 +53,14 @@ router.post('/login', async (req, res) => {
   }
 })
 
+router.post('/google', async (req, res) => {
+  console.log('Hello from Google login route')
+
+  const { token_id } = req.body
+  console.log('Google user: ', req.body)
+  console.log('Token id: ', token_id)
+})
+
 // POST  New User (Signup)
 router.post('/signup', async (req, res) => {
 
