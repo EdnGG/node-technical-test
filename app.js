@@ -16,7 +16,7 @@ const options = {
   useUnifiedTopology: true,
 }
 
-mongoose.connect(process.env.URI, options).then(
+mongoose.connect(process.env.URI_CLOUD, options).then(
   () => {
     console.log('conectado a Mongo DB',)
   }, err => { 
@@ -33,7 +33,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-
+// app.use(require('./routes/auth'))
 app.use(require('./routes/user'))
 app.use(require('./routes/upload'))
 

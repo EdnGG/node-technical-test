@@ -3,6 +3,17 @@ const router = express.Router()
 
 const jwt = require('jsonwebtoken')
 
+//
+
+const { check } = require('express-validator');
+
+// const { validarCampos } = require('../middlewares/validar-campos');
+
+const { googleSignin } = require('../controllers/auth');
+
+
+//
+
 const {verificarAuth, verificarAdministrador } = require('../middlewares/auth')
 
 // Importar el modelo User
@@ -53,13 +64,26 @@ router.post('/login', async (req, res) => {
   }
 })
 
-router.post('/google', async (req, res) => {
-  console.log('Hello from Google login route')
+/*************** */
 
-  const { token_id } = req.body
-  console.log('Google user: ', req.body)
-  console.log('Token id: ', token_id)
-})
+router.post('/google',
+  // [
+    // check('id_token', 'El id_token es necesario').not().isEmpty(),
+    // validarCampos
+// ],
+  googleSignin);
+
+
+
+ /*****************/
+
+// router.post('/google', async (req, res) => {
+//   console.log('Hello from Google login route')
+
+//   const { token_id } = req.body
+//   console.log('Google user: ', req.body)
+//   console.log('Token id: ', token_id)
+// })
 
 // POST  New User (Signup)
 router.post('/signup', async (req, res) => {
@@ -82,35 +106,6 @@ router.post('/signup', async (req, res) => {
       error
     })
   }
-})
-
-// PUT User (Actualizar usuario)
-router.put('/user/:id', [verificarAuth, verificarAdministrador], async(req, res) => { 
-  const _id = req.params.id
-  /*
-  con 'underscore' limitamos los campos que el usuario puede modificar
-  '_.pick()'
-  */
-  const body = _.pick(req.body, ['nombre', 'email', 'pass', 'activo'])
-  if (body.pass) {
-    body.pass = bcrypt.hashSync(req.body.pass, saltRounds)
-  }
-  try {
-    /*
-      En esta parte: {new: true} es necesaria, de lo contrario nos devolveria
-      el usuario sin actualizar
-      En esta parte: {runValidators: true} es para que valide los roles
-    */
-    const usuarioDB = await User.findByIdAndUpdate(_id, body, { new: true, runValidators: true })
-    return res.json(usuarioDB)
-    
-  } catch (error) {
-    return res.status(500).json({
-      mensaje: 'Something was wrong',
-      error
-    })
-  }
-
 })
 
 module.exports = router
