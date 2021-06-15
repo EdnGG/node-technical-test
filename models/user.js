@@ -19,6 +19,7 @@ const userSchema = new Schema({
   date: { type: Date, default: Date.now },
   role: { type: String, default: 'USER', enum: roles },
   active: { type: Boolean, default: true },
+  google: { type: Boolean, default: false },
   image: { type: String, required: false }
 })
 
@@ -36,4 +37,4 @@ userSchema.methods.toJSON = function () {
 
 const User = mongoose.model('User', userSchema)
 
-export default User
+module.exports = User
