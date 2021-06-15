@@ -41,7 +41,6 @@ router.post('/login', async (req, res) => {
     // Validating Password
     if (!bcrypt.compareSync(body.pass, userDB.pass)) {
       return res.status(400).json({
-        
         message: 'Wrong password '
       })
     }
@@ -58,7 +57,7 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     return res.status(400).json({
-      mensaje: 'Something was wrong',
+      mensaje: 'Unable to create new user',
       error
     })
   }
@@ -92,18 +91,46 @@ router.post('/signup', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     role: req.body.role,
+    // pass: req.body.pass
   }
   // Encriptando el password
-  body.pass = bcrypt.hashSync(req.body.pass, saltRounds)
   try {
+
+    body.pass = bcrypt.hashSync(req.body.pass, saltRounds)
+
+    if (!body.name && !req.body.pass && !body.email) {
+      return res.status(400).json({
+        message: 'Please fill up all fields correctly'
+      })
+    }
+
+    if (!body.name ) {
+      return res.status(400).json({
+        message: 'Name is required'
+      })
+    }
+  
+    if (!body.email) {
+      return res.status(400).json({
+        message: 'Email is required'
+      })
+    }
+
+    if (!req.body.pass) {
+      return res.status(400).json({
+        message: 'Password is required'
+      })
+    }
+
+    bcrypt.hashSync(req.body.pass, saltRounds)
 
   const userDB = await User.create(body)
     res.json(userDB)
 
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
-      mensaje: 'Something was wrong',
-      error
+      message: 'Please fiil up all fields',
+      err
     })
   }
 })
