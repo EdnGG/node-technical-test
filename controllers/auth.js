@@ -8,18 +8,20 @@ const { googleVerify } = require('../helpers/google-verify');
 
 const googleSignin = async(req, res = response) => {
 
+    // id_token from google
     const id_token  = req.body.id_token;
-    // id_token llega vacio
-    //console.log('token: ', id_token)
-    // console.log('res.body: ', res.body)
+    console.log('token: ', id_token)
+
+    // I receive res.body as undefined
+    console.log('res.body: ', res.body)
     
     try {
         const { email, name, image } = await googleVerify( id_token );
         
-        let user = await User.findOne({ email });
+        let userDB = await User.findOne({ email });
 
-        if ( !user ) {
-            // Tengo que crearlo
+        if ( !userDB ) {
+            // Creating new userDB
             const data = {
                 name,
                 email,
@@ -28,33 +30,29 @@ const googleSignin = async(req, res = response) => {
                 google: true
             };
 
-            user = new User( data );
-            let newUser = await user.save();
+            userDB = new User( data );
+            let newUser = await userDB.save();
             console.log('newUser', newUser)
-            // // Generar el JWT
+
+            // Generating  JWT
+            // Mongo creates new users setting _id as default
             const token = await generarJWT(newUser._id);
-            
             res.json({
-                user: newUser,
+                userDB: newUser,
                 token
             });
         }
 
-        // Si el usuario en DB
-        if (user) {
+        // If userDB exists
+        if (userDB) {
             res.json({
-                user,
-                token: await generarJWT(user._id)
+                userDB,
+                token: await generarJWT(userDB._id)
             });
-            // return res.status(401).json({
-            //     msg: 'Hable con el administrador, usuario bloqueado'
-            // });
         }
-        
-    } catch (error) {
-
+    } catch (err) {
         res.status(400).json({
-            msg: 'Token de Google no es válido ' + error
+            msg: 'Google token not valid! ' + err
         })
 
     }

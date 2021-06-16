@@ -3,20 +3,14 @@ const router = express.Router()
 
 const jwt = require('jsonwebtoken')
 
-//
-
 const { check } = require('express-validator');
-
-// const { validarCampos } = require('../middlewares/validar-campos');
 
 const { googleSignin } = require('../controllers/auth');
 
 
-//
-
 const {verificarAuth, verificarAdministrador } = require('../middlewares/auth')
 
-// Importar el modelo User
+// User model
 import User from '../models/user.js'
 
 // hash Password
@@ -45,10 +39,10 @@ router.post('/login', async (req, res) => {
       })
     }
 
-    // Generar token
+    // Generating token
     const token = jwt.sign({
       data: userDB
-    }, 'secret', {expiresIn: 60 * 60})
+    }, process.env.SECRETORPRIVATEKEY , {expiresIn: '4h'})
 
     res.json({
       userDB,
@@ -63,26 +57,8 @@ router.post('/login', async (req, res) => {
   }
 })
 
-/*************** */
-
-router.post('/google',
-  // [
-    // check('id_token', 'El id_token es necesario').not().isEmpty(),
-    // validarCampos
-// ],
-  googleSignin);
-
-
-
- /*****************/
-
-// router.post('/google', async (req, res) => {
-//   console.log('Hello from Google login route')
-
-//   const { token_id } = req.body
-//   console.log('Google user: ', req.body)
-//   console.log('Token id: ', token_id)
-// })
+// POST  New User (Google Login)
+router.post('/google', googleSignin);
 
 // POST  New User (Signup)
 router.post('/signup', async (req, res) => {
@@ -91,7 +67,6 @@ router.post('/signup', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     role: req.body.role,
-    // pass: req.body.pass
   }
   // Encriptando el password
   try {
